@@ -1,0 +1,48 @@
+This README file contains information on the contents of the meta-de10lite layer.
+
+Please see the corresponding sections below for details.
+
+
+## TODO
+- Find out why uboot jtaguart had to be specified with virtual memory address, since CPU was being probed after the uart, and offset was not automatically applied
+- Actually figure out what was going wrong with decompression (it magically works now)
+- Try not building DT directly into the kernel
+- Try booting a non-fitimage
+
+Dependencies
+============
+
+  URI: <first dependency>
+  branch: <branch name>
+
+  URI: <second dependency>
+  branch: <branch name>
+
+  .
+  .
+  .
+
+Patches
+=======
+
+Please submit any patches against the meta-de10lite layer to the xxxx mailing list (xxxx@zzzz.org)
+and cc: the maintainer:
+
+Maintainer: XXX YYYYYY <xxx.yyyyyy@zzzzz.com>
+
+Table of Contents
+=================
+
+  I. Adding the meta-de10lite layer to your build
+ II. Misc
+
+
+I. Adding the meta-de10lite layer to your build
+=================================================
+
+Run 'bitbake-layers add-layer meta-de10lite'
+
+II. Misc
+========
+
+--- replace with specific information about the meta-de10lite layer ---

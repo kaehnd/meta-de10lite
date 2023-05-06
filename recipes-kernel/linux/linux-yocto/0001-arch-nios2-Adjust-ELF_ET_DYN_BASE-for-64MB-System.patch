@@ -1,0 +1,29 @@
+From f00107d2c7e4f789d945542efb546d8b635828d2 Mon Sep 17 00:00:00 2001
+From: Danny Kaehn <kaehndan@gmail.com>
+Date: Mon, 3 Apr 2023 11:02:08 -0500
+Subject: [PATCH] arch: nios2: Adjust ELF_ET_DYN_BASE for 64MB System
+
+This value for the ELF dynamic loading offset was initially set to a
+value a) too high for a 64MB system and b) with bit 30, the tlb-bypass
+bit set. Move this to about halfway through our 64MB of memory, and
+don't bypass the TLB, as this is memory used for userspace.
+---
+ arch/nios2/include/asm/elf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/nios2/include/asm/elf.h b/arch/nios2/include/asm/elf.h
+index 984dd6de17c2..cedcaf615b56 100644
+--- a/arch/nios2/include/asm/elf.h
++++ b/arch/nios2/include/asm/elf.h
+@@ -23,7 +23,7 @@
+    the loader.  We need to make sure that it is out of the way of the program
+    that it will "exec", and that there is sufficient room for the brk.  */
+ 
+-#define ELF_ET_DYN_BASE		0xD0000000UL
++#define ELF_ET_DYN_BASE		0x0A000000UL
+ 
+ /* regs is struct pt_regs, pr_reg is elf_gregset_t (which is
+    now struct_user_regs, they are different) */
+-- 
+2.25.1
+

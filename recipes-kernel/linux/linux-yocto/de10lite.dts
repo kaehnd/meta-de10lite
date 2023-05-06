@@ -1,0 +1,208 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright (C) 2015 Altera Corporation. All rights reserved.
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+
+/ {
+	model = "Altera NiosII Max10";
+	compatible = "altr,niosii-de10lite";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	chosen {
+		bootargs = ""; //debug earlycon console=ttyS0,9600
+		stdout-path = &jtag_uart;
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu: cpu@0 {
+			device_type = "cpu";
+			compatible = "altr,nios2-1.1";
+			reg = <0x00000000>;
+			interrupt-controller;
+			#interrupt-cells = <1>;
+			altr,exception-addr = <0xc8000020>;
+			altr,fast-tlb-miss-addr = <0xc0000100>;
+			altr,has-div = <1>;
+			altr,has-initda = <1>;
+			altr,has-mmu = <1>;
+			altr,has-mul = <1>;
+			altr,implementation = "fast";
+			altr,pid-num-bits = <8>;
+			altr,reset-addr = <0xc8000000>;
+			altr,tlb-num-entries = <256>;
+			altr,tlb-num-ways = <16>;
+			altr,tlb-ptr-sz = <8>;
+			clock-frequency = <75000000>;
+			dcache-line-size = <32>;
+			dcache-size = <32768>;
+			icache-line-size = <32>;
+			icache-size = <32768>;
+		};
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0x08000000 0x03D09000>,
+			<0x00000000 0x00000400>;
+	};
+
+	sopc0: sopc@0 {
+		device_type = "soc";
+		ranges;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "altr,avalon", "simple-bus";
+		bus-frequency = <75000000>;
+
+		jtag_uart: serial@18001530 {
+			compatible = "altr,juart-1.0";
+			reg = <0x18001530 0x00000008>;
+			interrupt-parent = <&cpu>;
+			interrupts = <0>;
+		};
+
+		// a_16550_uart_0: serial@18001600 {
+		// 	compatible = "altr,16550-FIFO32", "ns16550a";
+		// 	reg = <0x18001600 0x00000200>;
+		// 	interrupt-parent = <&cpu>;
+		// 	interrupts = <3>;
+		// 	auto-flow-control = <1>;
+		// 	clock-frequency = <50000000>;
+		// 	fifo-size = <32>;
+		// 	reg-io-width = <4>;
+		// 	reg-shift = <2>;
+		// 	tx-threshold = <16>;
+		// };
+
+		sys_pll: clock@1 {
+			compatible = "altr,pll-1.0";
+			#clock-cells = <1>;
+
+			sys_pll_c0: sys_pll_c0 {
+				compatible = "fixed-clock";
+				#clock-cells = <0>;
+				clock-frequency = <75000000>;
+				clock-output-names = "sys_pll-c0";
+			};
+
+			sys_pll_c1: sys_pll_c1 {
+				compatible = "fixed-clock";
+				#clock-cells = <0>;
+				clock-frequency = <75000000>;
+				clock-output-names = "sys_pll-c1";
+			};
+		};
+
+		sys_clk_timer: timer@18001440 {
+			compatible = "altr,timer-1.0";
+			reg = <0x18001440 0x00000020>;
+			interrupt-parent = <&cpu>;
+			interrupts = <2>;
+			clock-frequency = <75000000>;
+		};
+
+		sys_clk_timer_1: timer@880 {
+			compatible = "altr,timer-1.0";
+			reg = <0x00000880 0x00000020>;
+			interrupt-parent = <&cpu>;
+			interrupts = <1>;
+			clock-frequency = <75000000>;
+		};
+
+		// rgmii_0_eth_tse_0: ethernet@400 {
+		// 	compatible = "altr,tse-msgdma-1.0", "altr,tse-1.0";
+		// 	reg = <0x00000400 0x00000400>,
+		// 		<0x00000820 0x00000020>,
+		// 		<0x00000800 0x00000020>,
+		// 		<0x000008c0 0x00000008>,
+		// 		<0x00000840 0x00000020>,
+		// 		<0x00000860 0x00000020>;
+		// 	reg-names = "control_port", "rx_csr", "rx_desc", "rx_resp", "tx_csr", "tx_desc";
+		// 	interrupt-parent = <&cpu>;
+		// 	interrupts = <4 5>;
+		// 	interrupt-names = "rx_irq", "tx_irq";
+		// 	rx-fifo-depth = <8192>;
+		// 	tx-fifo-depth = <8192>;
+		// 	address-bits = <48>;
+		// 	max-frame-size = <1518>;
+		// 	local-mac-address = [00 00 00 00 00 00];
+		// 	altr,has-supplementary-unicast;
+		// 	altr,enable-sup-addr = <1>;
+		// 	altr,has-hash-multicast-filter;
+		// 	altr,enable-hash = <1>;
+		// 	phy-mode = "mii"; // actually rmii, but there is an adapter to rmii
+		// 	phy-handle = <&phy0>;
+		// 	rgmii_0_eth_tse_0_mdio: mdio {
+		// 		compatible = "altr,tse-mdio";
+		// 		#address-cells = <1>;
+		// 		#size-cells = <0>;
+		// 		phy0: ethernet-phy@0 {
+		// 			reg = <0>;
+		// 			device_type = "ethernet-phy";
+		// 		};
+		// 	};
+		// };
+
+		led_pio: gpio@180014d0 {
+			compatible = "altr,pio-1.0";
+			reg = <0x00000910 0x00000010>;
+			altr,ngpio = <10>;
+			#gpio-cells = <2>;
+			gpio-controller;
+		};
+
+		fpga_leds: leds {
+			compatible = "gpio-leds";
+
+			led_fpga0: fpga0 {
+				label = "fpga_led0";
+				gpios = <&led_pio 0 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga1: fpga1 {
+				label = "fpga_led1";
+				gpios = <&led_pio 1 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga2: fpga2 {
+				label = "fpga_led2";
+				gpios = <&led_pio 2 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga3: fpga3 {
+				label = "fpga_led3";
+				gpios = <&led_pio 3 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga4: fpga4 {
+				label = "fpga_led4";
+				gpios = <&led_pio 4 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga5: fpga5 {
+				label = "fpga_led5";
+				gpios = <&led_pio 5 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga6: fpga6 {
+				label = "fpga_led6";
+				gpios = <&led_pio 6 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga7: fpga7 {
+				label = "fpga_led7";
+				gpios = <&led_pio 7 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga8: fpga8 {
+				label = "fpga_led8";
+				gpios = <&led_pio 8 GPIO_ACTIVE_HIGH>;
+			};
+			led_fpga9: fpga9 {
+				label = "fpga_led9";
+				gpios = <&led_pio 9 GPIO_ACTIVE_HIGH>;
+			};
+		};
+	};
+};

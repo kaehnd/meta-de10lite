@@ -1,0 +1,1 @@
+CFLAGS:append = "-DBROKEN_CLANG_ATOMICS"

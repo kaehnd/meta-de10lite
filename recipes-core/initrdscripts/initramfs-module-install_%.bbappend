@@ -1,0 +1,1 @@
+COMPATIBLE_HOST = "nios2-poky-linux"
