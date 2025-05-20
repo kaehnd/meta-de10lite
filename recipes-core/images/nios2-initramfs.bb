@@ -2,30 +2,25 @@ DESCRIPTION = "Small image capable of booting a device. The kernel includes \
 the Minimal RAM-based Initial Root Filesystem (initramfs), which finds the \
 first 'init' program more efficiently."
 LICENSE = "MIT"
-# Needed for the set_user_group functions to succeed
-DEPENDS += "shadow-native"
 
 inherit core-image
 
+IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} nios2-rsa-key"
 export IMAGE_BASENAME = "nios2-initramfs"
 
-BAD_RECOMMENDATIONS += "busybox-syslog"
 
-PACKAGE_INSTALL = "${VIRTUAL-RUNTIME_base-utils} ${INIT_PACKAGE}"
+# IMAGE_FEATURES:append = "
+#  ssh-server-dropbear
+#"
 
-# PACKAGE_INSTALL = "${VIRTUAL-RUNTIME_base-utils} base-passwd ${ROOTFS_BOOTSTRAP_INSTALL} ${INIT_PACKAGE}"
-PACKAGE_INSTALL:remove = "shadow python3"
-
-# Init scripts
-INIT_PACKAGE = "nios2-init"
-
-# Do not pollute the initrd image with rootfs features
-IMAGE_FEATURES = "read-only-rootfs"
 IMAGE_LINGUAS = ""
 IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
 IMAGE_ROOTFS_SIZE = "8192"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
-PACKAGE_EXCLUDE = "shadow"
+
+IMAGE_NAME_SUFFIX ?= ""
+
+# PACKAGE_EXCLUDE = "shadow"
 
 # python do_image_complete:append() {
 #     bb.warn('our stuff is running....')

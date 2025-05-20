@@ -7,6 +7,8 @@ This value for the ELF dynamic loading offset was initially set to a
 value a) too high for a 64MB system and b) with bit 30, the tlb-bypass
 bit set. Move this to about halfway through our 64MB of memory, and
 don't bypass the TLB, as this is memory used for userspace.
+
+Upstream-Status: Pending
 ---
  arch/nios2/include/asm/elf.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

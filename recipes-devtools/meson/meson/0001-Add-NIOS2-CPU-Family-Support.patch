@@ -1,0 +1,25 @@
+From f9f5e98094e796267b06f4f0047343758b86de5b Mon Sep 17 00:00:00 2001
+From: Danny Kaehn <kaehndan@gmail.com>
+Date: Sat, 17 May 2025 17:54:24 -0500
+Subject: [PATCH] Add NIOS2 CPU Family Support
+
+Upstream-Status: Pending
+---
+ mesonbuild/envconfig.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mesonbuild/envconfig.py b/mesonbuild/envconfig.py
+index 436355f..853586f 100644
+--- a/mesonbuild/envconfig.py
++++ b/mesonbuild/envconfig.py
+@@ -56,6 +56,7 @@ known_cpu_families = (
+     'mips',
+     'mips64',
+     'msp430',
++    'nios2',
+     'parisc',
+     'pic24',
+     'ppc',
+-- 
+2.43.0
+
